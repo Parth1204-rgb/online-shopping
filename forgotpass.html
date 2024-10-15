@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password</title>
+    <link rel="stylesheet" href="p.css">
+</head>
+<body>
+    <div class="forgot-password-container">
+        <h1>Forgot Password</h1>
+        <p>Please enter your email to reset your password.</p>
+        <form id="forgot-password-form">
+            <input type="email" id="email" placeholder="Email" required>
+            <button type="submit">Reset Password</button>
+        </form>
+        <p>Remembered your password? <a href="signin.html" class="login-button">Login here</a></p>
+    </div>
+
+    <script>
+        document.getElementById('forgot-password-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(data.message);
+                } else {
+                    alert(data.message || 'Error processing forgot password request');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while processing your request');
+            }
+        });
+    </script>
+</body>
+</html>

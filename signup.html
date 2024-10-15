@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="p.css">
+</head>
+<body>
+    <div class="registration-container">
+        <h1>Sign up</h1>
+        <form id="signup-form">
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="tel" id="mobile" placeholder="Mobile" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already a user? <a href="signin.html" class="login-button">Login here</a></p>
+    </div>
+    
+    <script>
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('fullName').value;
+            const mobile = document.getElementById('mobile').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert("Passwords don't match");
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ fullName, mobile, email, password }),
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(data.message);
+                    window.location.href = 'signin.html'; // Redirect to sign-in page
+                } else {
+                    alert(data.message || 'Error signing up');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while signing up');
+            }
+        });
+    </script>
+</body>
+</html>
